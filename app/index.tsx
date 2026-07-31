@@ -67,7 +67,9 @@ export default function WelcomeScreen(){
                 </View>
 
                 <View className='flex-row justify-center md:justify-start gap-8 pt-4 border-t border-amber-300/50'>
-                    <TouchableOpacity activeOpacity={0.6}>
+                    <TouchableOpacity activeOpacity={0.6}
+                        onPress={() => router.push('/privacidad')}
+                    >
                         <Text className='text-xs text-slate-700 font-semibold'>
                             Aviso de privacidad
                         </Text>
