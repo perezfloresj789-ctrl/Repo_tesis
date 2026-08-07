@@ -46,7 +46,7 @@ export default function WelcomeScreen(){
                         <View className='w-full gap-3.5'>
                             <TouchableOpacity
                                 activeOpacity={0.8}
-                                onPress={() => router.push('/(tabs)')}
+                                onPress={() => router.push('/Login')}
                                 className='w-full bg-[#F5D547] py-4 rounded-full items-center shadow-md active:bg-amber-400'
                             >
                                 <Text className='text-slate-900 font-black tracking-wider uppercase text-sm md:text-base'>
