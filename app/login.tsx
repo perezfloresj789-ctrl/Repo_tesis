@@ -26,7 +26,6 @@ export default function LoginScreen(){
                 contentContainerClassName="flex-grow justify-between p-6 md:-12"
                 bounces={false}
                >
-                {/* Encabezado del Logo */}
                  <View className="flex-row items-center gap-3">
                    <Logo size={22} />
                    <View>
@@ -39,13 +38,11 @@ export default function LoginScreen(){
                    </View>
                  </View>
 
-                {/* Contenedor Principal */}
                   <View className="w-full max-w-sm self-center bg-white/80 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 my-auto">
                    <Text className="text-2xl font-bold text-slate-900 text-center mb-6">
                      Bienvenido
                    </Text>
 
-                 {/* Campo Usuario */}
                  <View className="mb-4">
                   <View className="flex-row items-center bg-white border border-slate-200 rounded-xl px-4 py-3">
                    <FontAwesome5 name="user" size={16} color="#64748b" className="mr-3" />
@@ -60,7 +57,6 @@ export default function LoginScreen(){
                  </View>
                 </View>
 
-                 {/* Campo Contraseña */}
                   <View className="mb-6">
                    <View className="flex-row items-center bg-white border border-slate-200 rounded-xl px-4 py-3">
                    <FontAwesome5 name="lock" size={16} color="#64748b" className="mr-3" />
@@ -75,7 +71,6 @@ export default function LoginScreen(){
                    </View>
                   </View>
 
-                 {/* Botón Login */}
                   <TouchableOpacity
                    onPress={handleLogin}
                    activeOpacity={0.8}
@@ -86,7 +81,6 @@ export default function LoginScreen(){
                   </Text>
                   </TouchableOpacity>
 
-                 {/* Enlaces de recuperación y registro */}
                   <View className="items-center gap-2">
                    <TouchableOpacity onPress={() => router.push('/recuperar' as any)}>
                    <Text className="text-slate-600 text-sm font-medium">
@@ -102,7 +96,6 @@ export default function LoginScreen(){
                   </View>
                 </View>
             
-                 {/* Enlace Volver al pie de página */}
                   <TouchableOpacity
                    onPress={() => router.back()}
                    className="align-self-center py-2 mb-2"
