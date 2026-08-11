@@ -3,8 +3,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, {useState} from "react";
 import { Logo } from "@/components/Logo";
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
 import { View } from "@/components/Themed";
+import { registerUser } from "@/services/authService";
 
 export default function RegisterScreen(){
     const router = useRouter();
@@ -13,8 +14,9 @@ export default function RegisterScreen(){
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         if(!user || !email || !password || !confirmPassword){
             Alert.alert('campos incompletos', 'por favor llena todos los campos para continuar')
             return;
@@ -25,9 +27,25 @@ export default function RegisterScreen(){
             return;
         }
 
-        console.log('registro exitoso para:', user, email);
+        try{
+            setLoading(true);
+            await registerUser(email.trim(), password);
 
-        router.replace('/login' as any);
+            Alert.alert('registro exitoso','tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesion',
+                [
+                    {
+                        text: 'OK', 
+                        onPress: () => router.replace('/login' as any),
+                    },
+                ]
+            );
+        }catch (error: any){
+            Alert.alert('error al registrar', error.message || 'Ocurrio un error al crear la cuenta')
+        } finally {
+            setLoading(false)
+        }
+
+        
     };
 
     return (
@@ -124,11 +142,18 @@ export default function RegisterScreen(){
                         <TouchableOpacity
                             onPress={handleRegister}
                             activeOpacity={0.8}
-                            className="bg-[#d99b26] py-3.5 rounded-full items-center justify-center mb-6 shadow-sm"
-                        >
-                            <Text className="text-white font-bold text-base uppercase tracking-wider">
+                            className={`py-3.5 rounded-full items-center justify-center mb-6 shadow-sm${
+                                loading ? 'bg-[#d99b26]/60' : 'bg-[#d99b26]'
+                            }`}
+                            >
+                                {loading ? (
+                                    <ActivityIndicator color='#ffffff'/>
+                                ):(
+                                    <Text className="text-white font-bold text-base uppercase tracking-wider">
                                 Registrarse
                             </Text>
+                                )}
+                            
                         </TouchableOpacity>
 
                         <View className="items-center">
