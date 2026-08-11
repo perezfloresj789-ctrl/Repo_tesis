@@ -12,7 +12,6 @@ export default function LoginScreen(){
     const [contrasena, setContrasena] = useState('');
 
     const handleLogin = () => {
-    // Lógica de autenticación de usuario
     console.log('Iniciar sesión:', usuario);
     };
 
