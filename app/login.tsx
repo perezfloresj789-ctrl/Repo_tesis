@@ -1,19 +1,34 @@
-import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome5 } from '@expo/vector-icons';
 import '../global.css'
 import { Logo } from '@/components/Logo';
 import React, { useState } from 'react';
+import { loginUser } from '@/services/authService';
 
-export default function LoginScreen(){
+export default async function LoginScreen(){
     const router  = useRouter();
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = () => {
-    console.log('Iniciar sesión:', usuario);
+        if(!usuario.trim() || !contrasena.trim())
+          Alert.alert('campos imcompletos','pro favor ingresa tu usuario y contraseña')
+          return;
     };
+
+    try { 
+      setLoading(true);
+      await loginUser(usuario.trim(), contrasena);
+      router.replace('/(tabs)');
+    } catch (error: any){
+      Alert.alert('error de inicio de sesion',error.message || 'credenciales invalidas')
+    } finally {
+      setLoading(false)
+    }
 
     return(
         <SafeAreaView className='flex-1 bg-gradient-to-t from-white to-[#FFF5C3]'>
@@ -73,11 +88,18 @@ export default function LoginScreen(){
                   <TouchableOpacity
                    onPress={handleLogin}
                    activeOpacity={0.8}
-                   className="bg-[#d99b26] py-3.5 rounded-full items-center justify-center mb-6 shadow-sm"
+                   className={`py-3.5 rounded-full items-center justify-center mb-6 shadow-sm ${
+                    loading ? 'bg-[#d99b26]/60' : 'bg-[#d99b26]'
+                   }`}
                 >
-                  <Text className="text-white font-bold text-base uppercase tracking-wider">
+                  {loading ? (
+                    <ActivityIndicator color="#ffffff"/>
+                  ): (
+                   <Text className="text-white font-bold text-base uppercase tracking-wider">
                      Login
                   </Text>
+                  )}
+                  
                   </TouchableOpacity>
 
                   <View className="items-center gap-2">
