@@ -14,22 +14,22 @@ export default  function LoginScreen(){
     const [contrasena, setContrasena] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleLogin = () => {
-        if(!usuario.trim() || !contrasena.trim())
-          Alert.alert('campos imcompletos','pro favor ingresa tu usuario y contraseña')
-          return;
-    };
+    const handleLogin = async () => { 
+  if (!usuario.trim() || !contrasena.trim()) {
+    Alert.alert('Campos incompletos', 'Por favor ingresa tu usuario y contraseña.');
+    return;
+  }
 
-    try { 
-      setLoading(true);
-      await loginUser(usuario.trim(), contrasena);
-      router.replace('/(tabs)');
-    } catch (error: any){
-      Alert.alert('error de inicio de sesion',error.message || 'credenciales invalidas')
-    } finally {
-      setLoading(false)
-    }
-
+  try {
+    setLoading(true);
+    await loginUser(usuario.trim(), contrasena);
+    router.replace('/(tabs)');
+  } catch (error: any) {
+    Alert.alert('Error de inicio de sesión', error.message || 'Credenciales inválidas.');
+  } finally {
+    setLoading(false);
+  }
+};
     return(
         <SafeAreaView className='flex-1 bg-gradient-to-t from-white to-[#FFF5C3]'>
             <KeyboardAvoidingView

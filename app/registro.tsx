@@ -3,8 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, {useState} from "react";
 import { Logo } from "@/components/Logo";
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
-import { View } from "@/components/Themed";
+import { View, ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
 import { registerUser } from "@/services/authService";
 
 export default function RegisterScreen(){
