@@ -8,7 +8,7 @@ import { Logo } from '@/components/Logo';
 import React, { useState } from 'react';
 import { loginUser } from '@/services/authService';
 
-export default async function LoginScreen(){
+export default  function LoginScreen(){
     const router  = useRouter();
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
