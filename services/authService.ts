@@ -25,10 +25,10 @@ export async function loginUser(email:string, password: string): Promise<LoginRe
     return data;
 }
 
-export async function registerUser(email:string, password: string):Promise<RegisterResponse>{
+export async function registerUser(username: string, email:string, password: string):Promise<RegisterResponse>{
     return apiFetch<RegisterResponse>('/auth/register',{
         method: 'POST',
-        body: JSON.stringify({email,password})
+        body: JSON.stringify({user: username, email, password})
     });
 }
 

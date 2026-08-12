@@ -1,9 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import { Platform } from 'react-native';
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL ||
-(Platform.OS === 'android'? 'http://10.0.2.2:4000' : 'http://localhost:4000');
-
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.5:4000';
 export async function apiFetch<T>(
     endpoint: string,
     option: RequestInit ={}

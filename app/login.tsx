@@ -70,6 +70,11 @@ export default  function LoginScreen(){
                    />
                  </View>
                 </View>
+                <TouchableOpacity onPress={() => router.push('/recuperar' as any)}>
+                   <Text className="text-[#d99b26] text-sm font-extralight">
+                      olvidaste tu contra?
+                   </Text>
+                  </TouchableOpacity>
 
                   <View className="mb-6">
                    <View className="flex-row items-center bg-white border border-slate-200 rounded-xl px-4 py-3">
@@ -117,14 +122,7 @@ export default  function LoginScreen(){
                   </View>
                 </View>
             
-                  <TouchableOpacity
-                   onPress={() => router.back()}
-                   className="align-self-center py-2 mb-2"
-                >
-                  <Text className="text-slate-600 font-semibold text-center text-base">
-                     Volver
-                  </Text>
-                  </TouchableOpacity>
+                 
 
               </ScrollView>
             </KeyboardAvoidingView>

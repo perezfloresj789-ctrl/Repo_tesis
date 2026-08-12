@@ -3,7 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React, {useState} from "react";
 import { Logo } from "@/components/Logo";
-import { View, ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
+import { View,ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
 import { registerUser } from "@/services/authService";
 
 export default function RegisterScreen(){
@@ -15,34 +15,45 @@ export default function RegisterScreen(){
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const handleRegister = async () => {
-        if(!user || !email || !password || !confirmPassword){
-            Alert.alert('campos incompletos', 'por favor llena todos los campos para continuar')
-            return;
-        }
+   const handleRegister = async (e?: any) => {
+    if(e?.preventDefault){
+        e.preventDefault();
+    }
+    console.log("--> 1. Inicio de handleRegister");
+  console.log("Valores actualizados:", { user, email, password, confirmPassword });
 
-        if (password !== confirmPassword) {
-            Alert.alert('error', 'las contraseñas no coinciden');
-            return;
-        }
+    if (!user || !email || !password || !confirmPassword) {
+        Alert.alert('Campos incompletos', 'Por favor llena todos los campos para continuar.');
+        console.log('Campos incompletos', 'Por favor llena todos los campos para continuar.')
+        return;
+    }
 
-        try{
-            setLoading(true);
-            await registerUser(email.trim(), password);
+    if (password !== confirmPassword) {
+        Alert.alert('Error', 'Las contraseñas no coinciden.');
+        return;
+    }
 
-            Alert.alert('registro exitoso','tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesion',
-                [
-                    {
-                        text: 'OK', 
-                        onPress: () => router.replace('/login' as any),
-                    },
-                ]
-            );
-        }catch (error: any){
-            Alert.alert('error al registrar', error.message || 'Ocurrio un error al crear la cuenta')
-        } finally {
-            setLoading(false)
-        }
+    try {
+        setLoading(true);
+        await registerUser(user.trim(), email.trim());
+
+        Alert.alert(
+            'Registro exitoso',
+            'Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.',
+            [
+                {
+                    text: 'OK',
+                    onPress: () => router.replace('/login' as any),
+                },
+            ]
+        );
+    } catch (error: any) {
+        Alert.alert('Error al registrar', error.message || 'Ocurrió un error al crear la cuenta.');
+        console.log('Error al registrar', error.message || 'Ocurrió un error al crear la cuenta.');
+        
+    } finally {
+        setLoading(false);
+    }
 
         
     };
@@ -139,14 +150,18 @@ export default function RegisterScreen(){
                         </View>
 
                         <TouchableOpacity
-                            onPress={handleRegister}
+                            onPress={() => {
+                                console.log('click detectado')
+                                handleRegister();
+                            }}
+                            disabled={loading}
                             activeOpacity={0.8}
-                            className={`py-3.5 rounded-full items-center justify-center mb-6 shadow-sm${
+                            className={`py-3.5 rounded-full items-center justify-center mb-6 shadow-sm ${
                                 loading ? 'bg-[#d99b26]/60' : 'bg-[#d99b26]'
                             }`}
                             >
                                 {loading ? (
-                                    <ActivityIndicator color='#ffffff'/>
+                                    <ActivityIndicator color='#fff3ff'/>
                                 ):(
                                     <Text className="text-white font-bold text-base uppercase tracking-wider">
                                 Registrarse
