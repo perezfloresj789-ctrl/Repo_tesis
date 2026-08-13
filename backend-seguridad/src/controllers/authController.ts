@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { supabase } from "../lib/supabase.js";
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken'
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -59,38 +60,49 @@ export const register = async (req: Request, res: Response) => {
 
 //////////////////////////////////////////////////////////////
 
-export const login = async (req: Request, res: Response) => {
-    try {
-        const { email, password } = req.body;
+export const login = async ( req: Request, res: Response) => {
+    try{
+        const { identifier, email, user, password} = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Correo y contraseña son requeridos.' });
+        const loginInput = identifier || email || user;
+
+        if(!loginInput || !password){
+            return res.status(400).json({message: 'usuario/correo y contra son requeridos'});
         }
-
-        const { data: userData, error: userError } = await supabase
+            const { data: userData, error: userError }= await supabase
             .from('users')
             .select('*')
-            .eq('email', email)
+            .or(`email.eq.${loginInput},username.eq.${loginInput}`)
             .maybeSingle();
 
-        if (userError || !userData) {
-            return res.status(400).json({ message: 'Credenciales inválidas.' });
-        }
+            if( userError || !userData){
+                return res.status(400).json({message: 'credenciales invalidas'});
+            }
 
-        const isPasswordValid = await bcrypt.compare(password, userData.password);
+            const isPasswordValid = await bcrypt.compare(password, userData.password);
 
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Credenciales inválidas.' });
-        }
+            if(!isPasswordValid){
+                return res.status(400).json({ message: 'Credenciales invalidas'});
+            }
 
-        const { password: _, ...userWithoutPassword } = userData;
+            const jwtSecret = process.env.JWT_SECRET || 'secret_key';
+            const token = jwt.sign(
+                {id: userData.id, email: userData.email},
+                jwtSecret,
+                {expiresIn: '7d'}
+            );
 
-        return res.status(200).json({
-            message: 'Inicio de sesión exitoso',
-            user: userWithoutPassword,
-        });
-    } catch (error: any) {
+            const { password: _, ...userWithoutPassword} = userData;
+
+            return res.status(200).json({
+                message: 'Inicio de sesion exitoso',
+                token,
+                user: userWithoutPassword,
+            });
+            
+        
+    }catch (error: any){
         console.error('Error en controlador login:', error);
         return res.status(500).json({ message: 'Error interno del servidor.' });
-    }
-};
+        }
+}

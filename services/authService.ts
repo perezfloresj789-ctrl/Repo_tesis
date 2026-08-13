@@ -1,9 +1,15 @@
 import * as SecureStore from 'expo-secure-store';
 import { apiFetch } from './api';
 
+interface UserData{
+    id:number;
+    username: string;
+    email:string;
+}
 interface LoginResponse {
-    access_token: string;
-    token_type: string;
+    message: string;
+    token: string;
+    user: UserData;
 }
 
 interface RegisterResponse { 
@@ -14,13 +20,13 @@ interface RegisterResponse {
         createdAt: string;
     };
 }
-export async function loginUser(email:string, password: string): Promise<LoginResponse>{
+export async function loginUser(identifier: string, password: string): Promise<LoginResponse>{
     const data = await apiFetch<LoginResponse>('/auth/login',{
         method:'POST',
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({user: identifier, password}),
     });
-    if (data.access_token){
-        await SecureStore.setItemAsync('access_token', data.access_token);
+    if (data.token){
+        await SecureStore.setItemAsync('access_token', data.token);
     }
     return data;
 }

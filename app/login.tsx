@@ -67,20 +67,18 @@ export default  function LoginScreen(){
                   <View className="flex-row items-center bg-white border border-slate-200 rounded-xl px-4 py-3">
                    <FontAwesome5 name="user" size={16} color="#64748b" className="mr-3" />
                    <TextInput
-                     placeholder="Usuario"
+                     placeholder="Usuario o correo electronico"
                      placeholderTextColor="#94a3b8"
                      value={usuario}
                      onChangeText={setUsuario}
                      className="flex-1 text-slate-800 text-base p-0"
                      autoCapitalize="none"
+                     autoCorrect={false}
+                     keyboardType='email-address'
                    />
                  </View>
                 </View>
-                <TouchableOpacity onPress={() => router.push('/recuperar' as any)}>
-                   <Text className="text-[#d99b26] text-sm font-extralight">
-                      olvidaste tu contra?
-                   </Text>
-                  </TouchableOpacity>
+               
 
                   <View className="mb-6">
                    <View className="flex-row items-center bg-white border border-slate-200 rounded-xl px-4 py-3">
@@ -94,7 +92,14 @@ export default  function LoginScreen(){
                      className="flex-1 text-slate-800 text-base p-0"
                    />
                    </View>
+                    <TouchableOpacity onPress={() => router.push('/recuperar' as any)}>
+                   <Text className="text-[#d99b26] text-sm font-semibold text-right">
+                      olvidaste tu contra?
+                   </Text>
+                  </TouchableOpacity>
                   </View>
+
+                  
 
                   <TouchableOpacity
                    onPress={handleLogin}
@@ -114,12 +119,7 @@ export default  function LoginScreen(){
                   </TouchableOpacity>
 
                   <View className="items-center gap-2">
-                   <TouchableOpacity onPress={() => router.push('/recuperar' as any)}>
-                   <Text className="text-slate-600 text-sm font-medium">
-                      ¿Perdiste tu contraseña?
-                   </Text>
-                   </TouchableOpacity>
-
+                
                    <TouchableOpacity onPress={() => router.push('/registro' as any)}>
                    <Text className="text-[#d99b26] text-sm font-semibold">
                       ¿No tienes Cuenta? Regístrate
