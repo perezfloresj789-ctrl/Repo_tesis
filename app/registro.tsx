@@ -35,7 +35,7 @@ export default function RegisterScreen(){
 
     try {
         setLoading(true);
-        await registerUser(user.trim(), email.trim());
+        await registerUser(user.trim(), email.trim(), password);
 
         Alert.alert(
             'Registro exitoso',

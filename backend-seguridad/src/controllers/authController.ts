@@ -1,89 +1,91 @@
 import type { Request, Response } from "express";
+import { supabase } from "../lib/supabase.js";
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import prisma from '../lib/prisma.js';
-import { access } from "node:fs";
 
-export const register = async (req: Request, res: Response): Promise<void> => {
+export const register = async (req:Request, res: Response) => {
     try{
-        const {email, password} = req.body;
+        const {user, email, password} = req.body;
 
-        if (!email|| !password){
-            res.status(400).json({ error: 'el email y la contra son obligatorias'});
-            return;
+        if (!user || !email || !password){
+            return res.status(400).json({ message: ' Todos los campos son requeridos.'});
         }
 
-        const userExists = await prisma.user.findUnique({
-            where: { email},
-        });
+        const { data: existingUser, error: searchError} = await supabase
+        .from('User')
+        .select('*')
+        .or(`email.eq.${email},user.eq.${user}`)
+        .maybeSingle();
 
-        if (userExists){
-            res.status(400).json({error: 'el usuario ya se encuentra registrado.'});
-            return;
+        if(searchError){
+            return res.status(500).json({ message: 'Error interno en la base de datos.' });
         }
-        const salt = await bcrypt.genSalt(10);
-        const passwordHash = await bcrypt.hash(password, salt);
 
-        const newUser = await prisma.user.create({
-            data: {
+        if (existingUser) {
+      return res.status(400).json({ message: 'El usuario o el correo ya están registrados.' });
+         }
+
+         const saltRounds = 10;
+         const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+         const { data: newUser, error: insertError} = await supabase
+         .from('User')
+         .insert([
+            {
+                user,
                 email,
-                password: passwordHash,
+                password: hashedPassword,
             },
-            select: {
-                id:true,
-                email:true,
-                createdAt:true,
-            },
-        });
+         ])
+         .select('id, user, email, createdAt')
+         .single();
 
-        res.status(201).json({
-            Message: 'usuario registrado exitosamente',
-            user: newUser,
-        });
-    }catch(error){
-        console.error('error en register:',error);
-        res.status(500).json({error: 'error interno al registrar el usuario'});
-    }
+         if (insertError) {
+            console.error('Error al crear usuario en Supabase:', insertError);
+            return res.status(500).json({ message: 'No se pudo crear el usuario.' });
+         }
+
+         return res.status(201).json({
+      message: 'Usuario registrado exitosamente',
+      user: newUser,
+    });
+        }catch (error: any){
+           console.error('Error en controlador register:', error);
+    return res.status(500).json({ message: 'Error interno del servidor.' }); 
+        }
 };
 
-export const login = async ( req: Request, res: Response): Promise<void> => {
+export const login = async (req:Request, res:Response) => {
     try{
         const { email, password} = req.body;
 
-        if(!email || !password){
-            res.status(400).json({error: 'El email y la contraseña son obligatorios.'})
-            return;
+       if (!email || !password) {
+      return res.status(400).json({ message: 'Correo y contraseña son requeridos.' });
+        }
+        
+        const {data: userData, error: userError} = await supabase
+        .from('User')
+      .select('*')
+      .eq('email', email)
+      .maybeSingle();
+
+      if (userError || !userData) {
+      return res.status(400).json({ message: 'Credenciales inválidas.' });
         }
 
-        const user = await prisma.user.findUnique({
-            where: {email},
-        });
+        const isPasswordValid = await bcrypt.compare(password, userData.password);
 
-        if (!user){
-            res.status(401).json({ error: 'credenciales incorrectas'});
-            return;
+        if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Credenciales inválidas.' });
         }
 
-        const isPassValid = await bcrypt.compare(password, user.password);
-        if(!isPassValid){
-            res.status(401).json({error: 'credenciales incorrectas'});
-            return;
-        }
+        const { password: _, ...userWithoutPassword} = userData;
 
-        const secret = process.env.JWT_SECRET || 'secret_key';
-        const expiresInEnv = process.env.JWT_EXPIRES_IN || '1h';
-
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            secret,
-            { expiresIn: expiresInEnv as number | `${number}h` | `${number}d` | `${number}m` }        );
-
-        res.json({
-            access_token: token,
-            token_type: 'Bearer',
-        });
-    } catch (error) {
-        console.error('error en login:', error);
-        res.status(500).json({ error: 'error interno al iniciar sesión' });
+        return res.status(200).json({
+           message: 'Inicio de sesión exitoso',
+           user: userWithoutPassword,
+         });
+    }catch ( error: any){
+        console.error('Error en controlador login:', error);
+    return res.status(500).json({ message: 'Error interno del servidor.' });
     }
-};
+}

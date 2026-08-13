@@ -1,7 +1,6 @@
 import type {Request, Response, NextFunction} from 'express';
 import jwt from 'jsonwebtoken'
-import prisma from '../lib/prisma.js';
-
+import { supabase } from '../lib/supabase.js';
 export interface AuthenticatedRequest extends Request{
     user?:{
         id: number;
@@ -31,12 +30,13 @@ export const authenticateToken = async (
         const secret = process.env.JWT_SECRET || 'secret_key';
         const decoded = jwt.verify(token, secret) as JwtPayload;
 
-        const user = await prisma.user.findUnique({
-            where: { id:decoded.id},
-            select: { id:true, email:true},
-        });
+      const { data: user, error} =await supabase
+            .from('User')
+            .select('id, email')
+            .eq('id',decoded.id)
+            .maybeSingle()
 
-        if (!user){
+        if (error || !user){
             res.status(401).json({ error: 'usuario no encontrado o inactivo'});
             return;
         }

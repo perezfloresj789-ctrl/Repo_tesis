@@ -25,10 +25,18 @@ export async function loginUser(email:string, password: string): Promise<LoginRe
     return data;
 }
 
-export async function registerUser(username: string, email:string, password: string):Promise<RegisterResponse>{
-    return apiFetch<RegisterResponse>('/auth/register',{
+export async function registerUser(username: string, email: string, password: string): Promise<RegisterResponse> {
+    const payload = {
+        user: username,
+        email: email,
+        password: password
+    };
+
+    console.log("--> PAYLOAD GENERADO EN FRONTEND:", payload); // Log de verificación local
+
+    return apiFetch<RegisterResponse>('/auth/register', {
         method: 'POST',
-        body: JSON.stringify({user: username, email, password})
+        body: JSON.stringify(payload)
     });
 }
 
