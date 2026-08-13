@@ -31,7 +31,7 @@ export const authenticateToken = async (
         const decoded = jwt.verify(token, secret) as JwtPayload;
 
       const { data: user, error} =await supabase
-            .from('User')
+            .from('users')
             .select('id, email')
             .eq('id',decoded.id)
             .maybeSingle()

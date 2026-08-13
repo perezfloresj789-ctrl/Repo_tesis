@@ -7,6 +7,7 @@ import '../global.css'
 import { Logo } from '@/components/Logo';
 import React, { useState } from 'react';
 import { loginUser } from '@/services/authService';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default  function LoginScreen(){
     const router  = useRouter();
@@ -31,7 +32,12 @@ export default  function LoginScreen(){
   }
 };
     return(
-        <SafeAreaView className='flex-1 bg-gradient-to-t from-white to-[#FFF5C3]'>
+
+      <LinearGradient
+         colors={['#FFF5C3', '#FFFFFF']} 
+        style={{ flex: 1 }}
+      >
+          <SafeAreaView className='flex-1 bg-gradient-to-t from-white to-[#FFF5C3]'>
             <KeyboardAvoidingView
               behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
               className="flex-1"
@@ -128,5 +134,7 @@ export default  function LoginScreen(){
             </KeyboardAvoidingView>
         </SafeAreaView>
         
+      </LinearGradient>
+      
     )
 }

@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import { Logo } from "@/components/Logo";
 import { View,ActivityIndicator, Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity } from "react-native";
 import { registerUser } from "@/services/authService";
+import { LinearGradient } from "expo-linear-gradient";
 
 export default function RegisterScreen(){
     const router = useRouter();
@@ -49,7 +50,7 @@ export default function RegisterScreen(){
         );
     } catch (error: any) {
         Alert.alert('Error al registrar', error.message || 'Ocurrió un error al crear la cuenta.');
-        console.log('Error al registrar', error.message || 'Ocurrió un error al crear la cuenta.');
+        console.log('Error al registrar', error.message );
         
     } finally {
         setLoading(false);
@@ -59,7 +60,11 @@ export default function RegisterScreen(){
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-gradient-to-t from-white to-[#FFF5C3]">
+        <LinearGradient
+            colors={['#FFF5C3', '#FFFFFF']} 
+            style={{ flex: 1 }}
+        >
+<SafeAreaView className="flex-1 bg-gradient-to-t from-white to-[#FFF5C3]">
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding': 'height'}
                 className="flex-1"
@@ -181,5 +186,7 @@ export default function RegisterScreen(){
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
+        </LinearGradient>
+        
     )
 }
