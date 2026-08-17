@@ -8,12 +8,14 @@ import React, { useState } from 'react';
 
 export default function LoginScreen(){
     const router  = useRouter();
-    const [usuario, setUsuario] = useState('');
-    const [contrasena, setContrasena] = useState('');
+    const [user, setUser] = useState('');
+    const [password, setPassword] = useState('');
+    //Funcion para mostrar password
+    const [showPassword, setPasswordVisibility] = useState(false);
 
     const handleLogin = () => {
     // Lógica de autenticación de usuario
-    console.log('Iniciar sesión:', usuario);
+    console.log('Iniciar sesión:', user);
     };
 
     return(
@@ -26,7 +28,9 @@ export default function LoginScreen(){
                 contentContainerClassName="flex-grow justify-between p-6 md:-12"
                 bounces={false}
                >
-                {/* Encabezado del Logo */}
+                {/* Contenedor del Encabezado*/}
+                <View className="relative w-full flex-row items-center justify-between mt-2 mb-8">
+                  {/* Logo*/}
                  <View className="flex-row items-center gap-3">
                    <Logo size={22} />
                    <View>
@@ -36,8 +40,19 @@ export default function LoginScreen(){
                      <Text className="text-base md:text-lg font-bold text-slate-900 leading-tight">
                        Ciudadana
                      </Text>
-                   </View>
+                   </View> 
                  </View>
+
+                {/* Flwcha de regreso */}
+                  <TouchableOpacity 
+                    onPress={() => router.back()}
+                    className="absolute top-0 right-0 z-10 p-2"
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }} // Amplía el área táctil para facilitar el toque
+                  >
+                    <FontAwesome5 name="arrow-left" size={20} color="#64748b" />
+                  </TouchableOpacity>
+
+                </View>
 
                 {/* Contenedor Principal */}
                   <View className="w-full max-w-sm self-center bg-white/80 p-6 md:p-8 rounded-3xl shadow-sm border border-slate-100 my-auto">
@@ -52,8 +67,8 @@ export default function LoginScreen(){
                    <TextInput
                      placeholder="Usuario"
                      placeholderTextColor="#94a3b8"
-                     value={usuario}
-                     onChangeText={setUsuario}
+                     value={user}
+                     onChangeText={setUser}
                      className="flex-1 text-slate-800 text-base p-0"
                      autoCapitalize="none"
                    />
@@ -67,11 +82,22 @@ export default function LoginScreen(){
                    <TextInput
                      placeholder="Contraseña"
                      placeholderTextColor="#94a3b8"
-                     secureTextEntry
-                     value={contrasena}
-                     onChangeText={setContrasena}
+                     secureTextEntry={!showPassword}
+                     value={password}
+                     onChangeText={setPassword}
                      className="flex-1 text-slate-800 text-base p-0"
                    />
+                    {/*icono del Ojo*/}
+                      <TouchableOpacity 
+                        onPress={() => setPasswordVisibility(!showPassword)}
+                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                      >
+                      <FontAwesome5 
+                        name={showPassword ? "eye-slash" : "eye"} 
+                        size={16} 
+                        color="#64748b" 
+                      />
+                      </TouchableOpacity>
                    </View>
                   </View>
 
@@ -101,17 +127,6 @@ export default function LoginScreen(){
                   </TouchableOpacity>
                   </View>
                 </View>
-            
-                 {/* Enlace Volver al pie de página */}
-                  <TouchableOpacity
-                   onPress={() => router.back()}
-                   className="align-self-center py-2 mb-2"
-                >
-                  <Text className="text-slate-600 font-semibold text-center text-base">
-                     Volver
-                  </Text>
-                  </TouchableOpacity>
-
               </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
