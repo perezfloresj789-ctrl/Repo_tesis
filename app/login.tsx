@@ -14,6 +14,7 @@ export default  function LoginScreen(){
     const [usuario, setUsuario] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [loading, setLoading] = useState(false);
+    const [showPassword, setPasswordVisibility] = useState(false);
 
     const handleLogin = async () => { 
   if (!usuario.trim() || !contrasena.trim()) {
@@ -86,11 +87,21 @@ export default  function LoginScreen(){
                    <TextInput
                      placeholder="Contraseña"
                      placeholderTextColor="#94a3b8"
-                     secureTextEntry
+                     secureTextEntry={!showPassword}
                      value={contrasena}
                      onChangeText={setContrasena}
                      className="flex-1 text-slate-800 text-base p-0"
                    />
+                    <TouchableOpacity 
+                      onPress={() => setPasswordVisibility(!showPassword)}
+                      hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    >
+                    <FontAwesome5 
+                      name={showPassword ? "eye-slash" : "eye"} 
+                      size={16} 
+                      color="#64748b" 
+                      />
+                      </TouchableOpacity>
                    </View>
                     <TouchableOpacity onPress={() => router.push('/recuperar' as any)}>
                    <Text className="text-[#d99b26] text-sm font-semibold text-right">
