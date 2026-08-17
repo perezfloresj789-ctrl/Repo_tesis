@@ -38,8 +38,6 @@ export async function registerUser(username: string, email: string, password: st
         password: password
     };
 
-    console.log("--> PAYLOAD GENERADO EN FRONTEND:", payload); // Log de verificación local
-
     return apiFetch<RegisterResponse>('/auth/register', {
         method: 'POST',
         body: JSON.stringify(payload)

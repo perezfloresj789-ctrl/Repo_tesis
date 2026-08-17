@@ -25,7 +25,6 @@ export default function RegisterScreen(){
 
     if (!user || !email || !password || !confirmPassword) {
         Alert.alert('Campos incompletos', 'Por favor llena todos los campos para continuar.');
-        console.log('Campos incompletos', 'Por favor llena todos los campos para continuar.')
         return;
     }
 
@@ -50,7 +49,6 @@ export default function RegisterScreen(){
         );
     } catch (error: any) {
         Alert.alert('Error al registrar', error.message || 'Ocurrió un error al crear la cuenta.');
-        console.log('Error al registrar', error.message );
         
     } finally {
         setLoading(false);

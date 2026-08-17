@@ -1,4 +1,3 @@
-// src/lib/supabase.ts
 import dotenv from 'dotenv';
 dotenv.config();
 
