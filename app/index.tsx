@@ -4,13 +4,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import '../global.css'
 import { Logo } from '@/components/Logo';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function WelcomeScreen(){
 
     const router = useRouter();
 
     return (
-        <SafeAreaView className='flex-1 bg-gradient-to-t from-white to-[#FFF5C3]'>
+
+        <LinearGradient
+        colors={['#FFF5C3', '#FFFFFF']} 
+        style={{ flex: 1 }}
+    >
+        
+        <SafeAreaView className='flex-1'>
             <ScrollView
                 contentContainerClassName='flex-grow justify-between p-6 md:p-12'
                 bounces={false}
@@ -46,7 +53,7 @@ export default function WelcomeScreen(){
                         <View className='w-full gap-3.5'>
                             <TouchableOpacity
                                 activeOpacity={0.8}
-                                onPress={() => router.push('/Login')}
+                                onPress={() => router.push('/login' as any)}
                                 className='w-full bg-[#F5D547] py-4 rounded-full items-center shadow-md active:bg-amber-400'
                             >
                                 <Text className='text-slate-900 font-black tracking-wider uppercase text-sm md:text-base'>
@@ -82,5 +89,6 @@ export default function WelcomeScreen(){
                 </View>
             </ScrollView>
         </SafeAreaView>
+        </LinearGradient>
     )
 }
